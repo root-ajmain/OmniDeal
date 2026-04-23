@@ -1,0 +1,16 @@
+{
+  "name": "omnideal-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "admin": "cd admin && npm run dev",
+    "dev": "npm run server & npm run client & npm run admin",
+    "install:all": "cd server && npm install && cd ../client && npm install && cd ../admin && npm install",
+    "seed": "cd server && npm run seed",
+    "build:client": "cd client && npm run build",
+    "build:admin": "cd admin && npm run build"
+  },
+  "description": "OmniDeal - Full-stack E-Commerce Platform"
+}
