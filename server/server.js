@@ -31,8 +31,20 @@ connectDB();
 const app = express();
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.ADMIN_URL,
+].filter(Boolean).map(o => o.replace(/\/$/, ''));
+
 app.use(cors({
-  origin: [process.env.CLIENT_URL, process.env.ADMIN_URL].filter(Boolean),
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);
+    const clean = origin.replace(/\/$/, '');
+    if (allowedOrigins.includes(clean) || clean.endsWith('.vercel.app')) {
+      return cb(null, true);
+    }
+    cb(new Error('Not allowed by CORS'));
+  },
   credentials: true,
 }));
 
