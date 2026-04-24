@@ -28,11 +28,6 @@ dotenv.config();
 
 const app = express();
 
-app.use(async (req, res, next) => {
-  try { await connectDB(); next(); } catch (err) { next(err); }
-});
-
-app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 const allowedOrigins = [
   process.env.CLIENT_URL,
   process.env.ADMIN_URL,
@@ -49,6 +44,12 @@ app.use(cors({
   },
   credentials: true,
 }));
+
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+
+app.use(async (req, res, next) => {
+  try { await connectDB(); next(); } catch (err) { next(err); }
+});
 
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200 });
 app.use('/api/', limiter);
