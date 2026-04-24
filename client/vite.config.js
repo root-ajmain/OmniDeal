@@ -22,7 +22,6 @@ export default defineConfig({
           router: ['react-router-dom'],
           query: ['@tanstack/react-query'],
           motion: ['framer-motion'],
-          charts: ['recharts'],
         },
       },
     },
