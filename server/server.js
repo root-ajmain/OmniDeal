@@ -26,9 +26,11 @@ import { errorHandler, notFound } from './src/middleware/errorHandler.js';
 
 dotenv.config();
 
-connectDB();
-
 const app = express();
+
+app.use(async (req, res, next) => {
+  try { await connectDB(); next(); } catch (err) { next(err); }
+});
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 const allowedOrigins = [
@@ -78,8 +80,10 @@ app.use(errorHandler);
 // Local dev: start server normally
 // Vercel: export app as serverless handler (no app.listen)
 if (process.env.VERCEL !== '1') {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`OmniDeal server running on port ${PORT}`));
+  connectDB().then(() => {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`OmniDeal server running on port ${PORT}`));
+  });
 }
 
 export default app;
